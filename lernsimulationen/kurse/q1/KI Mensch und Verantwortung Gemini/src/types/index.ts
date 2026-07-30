@@ -82,10 +82,38 @@ export interface PlayerProfile {
   dilemmaDecisions: Record<number, number>;
   notes: Record<number, string>;
   reflections: Record<number, string>;
+  
+  // ALL TIMESTAMPS FOR COMPLETE AUDIT TRAIL
+  createdAt?: string;
+  lastUpdatedAt?: string;
+  chapterCompletedAt?: Record<number, string>;
+  reflectionSavedAt?: Record<number, string>;
+  codeSavedAt?: Record<number, string>;
+  dilemmaDecidedAt?: Record<number, string>;
+
   settings: {
     typewriterSpeed: number;
     soundEnabled: boolean;
   };
+}
+
+export interface ExportProjectFile {
+  formatVersion: string;
+  exportedAt: string;
+  courseTitle: string;
+  studentProfile: PlayerProfile;
+  chapterLogs: Array<{
+    chapterId: number;
+    chapterTitle: string;
+    completedAt?: string;
+    dilemmaChoiceIndex?: number;
+    dilemmaStance?: string;
+    dilemmaTimestamp?: string;
+    htmlCodeInput?: string;
+    htmlCodeTimestamp?: string;
+    studentReflection?: string;
+    reflectionTimestamp?: string;
+  }>;
 }
 
 export interface SupabaseEventHook {
