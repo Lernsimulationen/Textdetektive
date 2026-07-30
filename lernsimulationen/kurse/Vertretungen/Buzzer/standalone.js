@@ -38,7 +38,7 @@
     await load(rows[0].id);
   }
   async function update(changes) { await api('sessions', 'PATCH', `id=eq.${state.id}`, changes); await load(state.id); }
-  function startPolling() { clearInterval(timer); timer = setInterval(async () => { if (state) { try { await load(state.id); render(); } catch (_) {} } }, 900); }
+  function startPolling() { clearInterval(timer); timer = setInterval(async () => { if (state) { try { const editing = document.activeElement?.id; await load(state.id); if (editing !== 'code' && editing !== 'name') render(); } catch (_) {} } }, 900); }
 
   function teacher() {
     if (!state) return `<main class="welcome"><div class="brand">● Classroom Buzzer</div><h1>Unterricht.<br>Sofort aktiv.</h1><p>Eine Sitzung erstellen, Code teilen, loslegen.</p><button class="primary" data-action="new">Neue Sitzung erstellen</button></main>`;
