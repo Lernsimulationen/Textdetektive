@@ -1,11 +1,49 @@
 <!doctype html>
 <html lang="de">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#5b43ef" />
-    <meta name="robots" content="noindex, nofollow, noarchive" />
-    <title>Classroom Buzzer</title>
-  </head>
-  <body><div id="app"></div><script type="module" src="./src/main.ts"></script></body>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#5b43ef">
+  <title>Classroom Buzzer</title>
+  <style>
+    :root{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#202034;background:#f6f6fb}*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button{border:0;border-radius:12px;padding:.85rem 1.1rem;font-weight:800;cursor:pointer}.primary{background:#5b43ef;color:#fff;box-shadow:0 5px 14px #5b43ef55}.quiet{background:#ececf5;color:#33334a}.danger{background:#df3853;color:#fff}.brand{color:#393093;font-weight:900}.welcome,.student{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px}.welcome h1{font-size:clamp(2.6rem,8vw,5.5rem);line-height:1;margin:16px 0}.welcome p{color:#6d6d80;font-size:1.15rem;max-width:560px}.dashboard{max-width:1300px;margin:auto;padding:22px}header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.hero,.card{background:#fff;border:1px solid #e6e6ef;border-radius:20px;box-shadow:0 10px 28px #33334a0c}.hero{padding:clamp(22px,4vw,42px);display:flex;align-items:center;gap:24px;justify-content:space-between}.code{font-size:clamp(2.5rem,7vw,5rem);letter-spacing:.1em;margin:2px 0}.live{color:#d92d4e;font-weight:800}.qr{width:120px;height:120px;border-radius:15px;background:#1d1d2b;color:white;display:grid;place-items:center;font-size:4rem}.actions{display:grid;gap:8px}.grid{display:grid;grid-template-columns:250px minmax(0,1fr) 240px;gap:18px;margin-top:18px}.card{padding:21px}.card h2{margin:0 0 15px;font-size:1.1rem}label{display:grid;gap:6px;margin:12px 0;font-weight:700}select,input{padding:11px;border:2px solid #ddddE9;border-radius:10px;background:white}.switch{display:flex;align-items:center;gap:8px}.switch input{width:19px;height:19px}.winner{font-size:clamp(1.7rem,4vw,3rem);font-weight:900;border-radius:14px;padding:20px;background:#eeedff;color:#3e34ad}.winner small{font-size:1rem;display:block;margin-top:6px}ol{list-style:none;padding:0;margin:0}li{display:flex;gap:9px;align-items:center;padding:11px 2px;border-bottom:1px solid #eeeef4}.dot{width:12px;height:12px;border-radius:50%;display:inline-block}.participant{display:flex;gap:8px;align-items:center;margin:10px 0}.student-card{width:min(100%,470px);padding:34px;display:grid;gap:15px}.student-card h1{margin:0;font-size:2.2rem}.student-top{width:min(100%,700px);display:flex;align-items:center;gap:8px}.student-top span:last-child{margin-left:auto;color:#5b43ef}.play{width:min(100%,700px);margin-top:10vh}.play h1{font-size:clamp(2rem,7vw,4.4rem);line-height:1.05}.buzzer{width:min(75vw,440px);aspect-ratio:1;border-radius:50%;background:#e5405a;color:white;font-size:clamp(2rem,7vw,4rem);box-shadow:inset 0 -18px #b92741,0 15px 0 #d7d7e3}.buzzer:disabled{background:#a9a9b7;box-shadow:inset 0 -18px #898996;cursor:not-allowed}.answers{display:grid;grid-template-columns:1fr 1fr;gap:15px}.answer{min-height:170px;color:#fff;font-size:2.2rem}.yes{background:#17855e}.no{background:#d34259}.poll{background:#5b43ef}.hidden{display:none}@media(max-width:850px){.grid{grid-template-columns:1fr 1fr}.results{grid-column:span 2}.hero{flex-wrap:wrap}.actions{grid-template-columns:1fr 1fr;width:100%}}@media(max-width:560px){.dashboard{padding:14px}.grid{grid-template-columns:1fr}.results{grid-column:auto}.hero{display:grid}.qr{justify-self:center}.actions{grid-template-columns:1fr}.student{padding:20px}}
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script>
+    (() => {
+      const KEY = 'classroom-buzzer-standalone';
+      const colors = ['#5b43ef','#e7476d','#008d98','#e48800','#4c8d2b','#b63caa'];
+      const names = ['Tiger','Orcas','Kometen','Eulen','Roboter','Vulkane','Phönix','Saturn','Pinguine','Wölfe'];
+      const app = document.getElementById('app');
+      let view = location.hash.startsWith('#student') ? 'student' : 'teacher';
+      let me = sessionStorage.getItem('buzzer-me') || '';
+      const read = () => JSON.parse(localStorage.getItem(KEY) || 'null');
+      const save = state => { localStorage.setItem(KEY, JSON.stringify(state)); render(); };
+      const esc = value => String(value).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+      const newSession = () => ({ code: Math.random().toString(36).slice(2,8).toUpperCase(), active:false, mode:'buzzer', group:false, participants:[], responses:[] });
+      function teacher() {
+        const s = read();
+        if (!s) return `<main class="welcome"><div class="brand">● Classroom Buzzer</div><h1>Unterricht.<br>Sofort aktiv.</h1><p>Erstelle eine Sitzung und starte direkt eine schnelle Abstimmung oder einen Buzzer.</p><button class="primary" data-action="new">Neue Sitzung erstellen</button><button class="quiet" data-action="student">Schüleransicht testen</button></main>`;
+        const first = s.responses[0], winner = first && s.participants.find(p => p.id === first.id);
+        const rows = s.responses.map((r,i) => { const p=s.participants.find(x=>x.id===r.id); return p ? `<li><b>${i+1}</b><span class="dot" style="background:${p.color}"></span>${esc(p.name)} <small>${esc(r.value)}</small></li>` : ''; }).join('') || '<li>Noch keine Antworten</li>';
+        return `<main class="dashboard"><header><div class="brand">● Classroom Buzzer</div><button class="quiet" data-action="student">Schüleransicht</button></header><section class="hero"><div><small>SITZUNGSCODE</small><h1 class="code">${s.code}</h1><p>${s.participants.length} Teilnehmende · ${s.active ? '<span class="live">● LIVE</span>' : 'Bereit zum Start'}</p></div><div class="qr" title="Sitzungscode: ${s.code}">▦</div><div class="actions"><button class="${s.active?'danger':'primary'}" data-action="start">${s.active?'Sitzung stoppen':'Sitzung starten'}</button><button class="quiet" data-action="reset">Runde zurücksetzen</button></div></section><section class="grid"><aside class="card"><h2>Steuerung</h2><label>Modus<select id="mode"><option value="buzzer">Buzzer</option><option value="truefalse">Richtig / Falsch</option><option value="poll">Umfrage</option><option value="speed">Schnelligkeit</option></select></label><label class="switch"><input id="group" type="checkbox"> Gruppenmodus</label><button class="quiet" data-action="clear">Ergebnisse löschen</button></aside><section class="card results"><h2>Live-Ergebnisse</h2>${winner ? `<div class="winner">${esc(winner.name)}<small>${esc(first.value)}</small></div>` : ''}<ol>${rows}</ol></section><aside class="card"><h2>Teilnehmende</h2>${s.participants.map(p=>`<div class="participant"><span class="dot" style="background:${p.color}"></span>${esc(p.name)}</div>`).join('') || '<p>Noch niemand dabei.</p>'}</aside></section></main>`;
+      }
+      function student() {
+        const s = read();
+        if (!s) return `<main class="student"><div class="brand">● Classroom Buzzer</div><section class="card student-card"><h1>Sitzung beitreten</h1><p>Auf diesem Gerät wurde noch keine Sitzung erstellt.</p><button class="quiet" data-action="teacher">Lehreransicht</button></section></main>`;
+        let p=s.participants.find(x=>x.id===me);
+        if (!p) return `<main class="student"><div class="brand">● Classroom Buzzer</div><section class="card student-card"><small>SITZUNG ${s.code}</small><h1>Willkommen!</h1><p>${s.group?'Wähle eine Gruppe.':'Gib deine Initialen ein (maximal drei Zeichen).'}</p>${s.group?`<select id="name">${names.map(n=>`<option>${n}</option>`).join('')}</select>`:'<input id="name" maxlength="3" placeholder="MS" autofocus>'}<button class="primary" data-action="join">Beitreten</button></section></main>`;
+        const sent=s.responses.some(r=>r.id===me);
+        let controls = s.mode==='truefalse' ? '<div class="answers"><button class="answer yes" data-answer="Richtig">✓<br><small>Richtig</small></button><button class="answer no" data-answer="Falsch">×<br><small>Falsch</small></button></div>' : s.mode==='poll' ? '<div class="answers">'+['A','B','C','D'].map(a=>`<button class="answer poll" data-answer="${a}">${a}</button>`).join('')+'</div>' : `<button class="buzzer" data-answer="${s.mode==='speed'?'Bereit':'Buzzer'}" ${!s.active||sent?'disabled':''}>${sent?'GESENDET':'DRÜCK MICH!'}</button>`;
+        return `<main class="student"><div class="student-top"><span class="dot" style="background:${p.color}"></span><b>${esc(p.name)}</b><span>${s.active?'● Live':'Warte auf Start …'}</span></div><section class="play"><small>${s.mode.toUpperCase()}</small><h1>${s.active?'Deine Antwort zählt.':'Gleich geht’s los.'}</h1>${controls}</section></main>`;
+      }
+      function render() { app.innerHTML = view==='teacher' ? teacher() : student(); const s=read(); const mode=document.getElementById('mode'), group=document.getElementById('group'); if(s&&mode){mode.value=s.mode;group.checked=s.group;mode.onchange=()=>{s.mode=mode.value;save(s)};group.onchange=()=>{s.group=group.checked;save(s)}} document.querySelectorAll('[data-action]').forEach(x=>x.onclick=()=>act(x.dataset.action)); document.querySelectorAll('[data-answer]').forEach(x=>x.onclick=()=>answer(x.dataset.answer)); }
+      function act(action) { let s=read(); if(action==='new'){save(newSession());return} if(action==='student'){view='student';location.hash='student';render();return} if(action==='teacher'){view='teacher';location.hash='teacher';render();return} if(action==='start'){s.active=!s.active} if(action==='reset'||action==='clear'){s.responses=[]} if(action==='join'){const name=(document.getElementById('name').value||'').trim().toUpperCase();if(!name)return;me=String(Date.now());sessionStorage.setItem('buzzer-me',me);s.participants.push({id:me,name,color:colors[s.participants.length%colors.length]})} save(s); }
+      function answer(value) { const s=read(); if(!s.active||s.responses.some(r=>r.id===me))return; navigator.vibrate&&navigator.vibrate(35);s.responses.push({id:me,value,at:Date.now()});save(s); }
+      window.addEventListener('storage',render); render();
+    })();
+  </script>
+</body>
 </html>
