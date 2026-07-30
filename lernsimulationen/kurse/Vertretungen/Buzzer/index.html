@@ -11,7 +11,7 @@
 </head>
 <body>
   <div id="app"></div>
-  <script>
+  <script type="application/disabled">
     (() => {
       const KEY = 'classroom-buzzer-standalone';
       const colors = ['#5b43ef','#e7476d','#008d98','#e48800','#4c8d2b','#b63caa'];
@@ -45,6 +45,11 @@
       window.addEventListener('storage',render); render();
     })();
   </script>
+  <style>
+    body{min-height:100vh;background:#eef0ff url('./assets/classroom-aurora.png') center/cover fixed no-repeat}
+    .dashboard,.welcome,.student{position:relative;z-index:1}.brand{letter-spacing:-.03em;font-size:1.03rem}.hero,.card{background:rgba(255,255,255,.86);backdrop-filter:blur(18px);border-color:rgba(255,255,255,.78);box-shadow:0 20px 50px rgba(45,44,91,.13)}
+    .hero{overflow:hidden}.hero:after{content:"";position:absolute;width:260px;height:260px;right:-120px;top:-150px;border-radius:50%;background:#745cff18}.hero>*{position:relative;z-index:1}.primary{background:linear-gradient(135deg,#5b43ef,#765ff6);box-shadow:0 10px 24px #5b43ef48}.primary:hover{transform:translateY(-2px)}button{transition:transform .18s ease,box-shadow .18s ease}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #57c4d4;outline-offset:3px}.student-card{background:rgba(255,255,255,.9);border-radius:25px}input,select{background:rgba(255,255,255,.96);font-size:1.05rem}input:focus{border-color:#5b43ef;box-shadow:0 0 0 4px #5b43ef1c}.buzzer{background:linear-gradient(145deg,#ff6079,#d92f50);box-shadow:inset 0 -18px #ad203b,0 17px 0 #c7c8d5,0 25px 40px #d92f5055}.qr{box-shadow:0 10px 25px #22233d20}
+  </style>
   <script src="./qrcode.js"></script>
   <script src="./standalone.js"></script>
 </body>
