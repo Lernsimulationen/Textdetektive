@@ -341,8 +341,10 @@ export class LocalDataService implements IDataService {
   }
 }
 
-// DataService Factory (Easy replacement for Supabase)
-let currentDataService: IDataService = new LocalDataService();
+import { SupabaseDataService } from './SupabaseDataService';
+
+// DataService Factory (Supabase mit intelligentem Fallback)
+let currentDataService: IDataService = new SupabaseDataService();
 
 export function getDataService(): IDataService {
   return currentDataService;
