@@ -45,9 +45,11 @@ export class StudentView {
     container.innerHTML = `
       <div class="student-container">
         <div class="card join-card">
-          <div class="join-title">
-            <h1>Classroom Buzzer</h1>
-            <p style="color: var(--text-muted);">Sitzung beitreten</p>
+          <div class="join-card-header">
+            <div class="join-title">
+              <h1>Classroom Buzzer</h1>
+              <p style="color: rgba(255, 255, 255, 0.85); font-weight: 600;">Sitzung beitreten</p>
+            </div>
           </div>
 
           <form id="join-form" style="display: flex; flex-direction: column; gap: 16px;">

@@ -295,9 +295,11 @@ Minimum version required to store current data is: `+b+`.
 `),n=encodeURI(e),i=document.createElement("a");i.setAttribute("href",n),i.setAttribute("download",`Classroom_Buzzer_${t.code}_Runde_${t.roundNumber}.csv`),document.body.appendChild(i),i.click(),document.body.removeChild(i)}}class tt{constructor(){x(this,"currentCode",null);x(this,"currentParticipant",null);x(this,"unsubscribe",null)}async init(t,r){this.currentCode=r?r.toUpperCase():null;const e=sessionStorage.getItem("cb_participant");if(e&&this.currentCode)try{this.currentParticipant=JSON.parse(e)}catch(n){console.error(n)}this.currentParticipant&&this.currentCode?this.subscribeAndRender(t):this.renderJoinForm(t)}async renderJoinForm(t){var o,c;const r=D();let e=!1;if(this.currentCode){const a=await r.getState(this.currentCode);a&&a.groupMode==="group"&&(e=!0)}const n=K.map(a=>`<option value="${a}">${a}</option>`).join("");t.innerHTML=`
       <div class="student-container">
         <div class="card join-card">
-          <div class="join-title">
-            <h1>Classroom Buzzer</h1>
-            <p style="color: var(--text-muted);">Sitzung beitreten</p>
+          <div class="join-card-header">
+            <div class="join-title">
+              <h1>Classroom Buzzer</h1>
+              <p style="color: rgba(255, 255, 255, 0.85); font-weight: 600;">Sitzung beitreten</p>
+            </div>
           </div>
 
           <form id="join-form" style="display: flex; flex-direction: column; gap: 16px;">
