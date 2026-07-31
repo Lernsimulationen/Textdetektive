@@ -22,16 +22,39 @@ export class SupabaseDataService implements IDataService {
   }
 
   private initSupabase(): void {
-    if (typeof window !== 'undefined' && (window as any).supabase) {
-      try {
+    if (typeof window === 'undefined') return;
+
+    if ((window as any).supabase) {
+      this.setupClient();
+      return;
+    }
+
+    // Non-blocking dynamic CDN load for Supabase SDK
+    try {
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+      script.async = true;
+      script.onload = () => this.setupClient();
+      script.onerror = () => {
+        console.warn('Supabase CDN script could not be loaded. Operating in Local Mode.');
+      };
+      document.head.appendChild(script);
+    } catch (e) {
+      console.warn('Non-blocking Supabase init error:', e);
+    }
+  }
+
+  private setupClient(): void {
+    try {
+      if ((window as any).supabase) {
         this.supabaseClient = (window as any).supabase.createClient(
           SUPABASE_CONFIG.url,
           SUPABASE_CONFIG.anonKey
         );
-        console.log('⚡ Supabase Client initialized for URL:', SUPABASE_CONFIG.url);
-      } catch (e) {
-        console.warn('Supabase initialization failed, using LocalDataService fallback:', e);
+        console.log('⚡ Supabase Realtime Client active for URL:', SUPABASE_CONFIG.url);
       }
+    } catch (e) {
+      console.warn('Supabase setup error:', e);
     }
   }
 
@@ -50,7 +73,7 @@ export class SupabaseDataService implements IDataService {
           countdown: state.countdown,
         });
       } catch (e) {
-        console.warn('Supabase session sync failed:', e);
+        console.warn('Supabase session sync skipped:', e);
       }
     }
     return state;
@@ -70,7 +93,7 @@ export class SupabaseDataService implements IDataService {
           joined_at: participant.joinedAt,
         });
       } catch (e) {
-        console.warn('Supabase participant sync failed:', e);
+        console.warn('Supabase participant sync skipped:', e);
       }
     }
     return participant;
@@ -87,7 +110,7 @@ export class SupabaseDataService implements IDataService {
           payload: { timestamp: Date.now() },
         });
       } catch (e) {
-        console.warn('Supabase buzz sync failed:', e);
+        console.warn('Supabase buzz sync skipped:', e);
       }
     }
     return success;
@@ -104,7 +127,7 @@ export class SupabaseDataService implements IDataService {
           payload: { option, timestamp: Date.now() },
         });
       } catch (e) {
-        console.warn('Supabase vote sync failed:', e);
+        console.warn('Supabase vote sync skipped:', e);
       }
     }
     return success;
@@ -136,7 +159,7 @@ export class SupabaseDataService implements IDataService {
           this.supabaseClient.removeChannel(channel);
         };
       } catch (e) {
-        console.warn('Supabase channel subscription failed:', e);
+        console.warn('Supabase channel subscription error:', e);
       }
     }
 
