@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" rx="128" fill="#0f172a"/>
+  <circle cx="256" cy="256" r="180" fill="url(#grad)" stroke="#7f1d1d" stroke-width="20"/>
+  <circle cx="256" cy="256" r="140" fill="#dc2626"/>
+  <path d="M 180 200 Q 256 160 332 200" fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="round" opacity="0.6"/>
+  <text x="256" y="275" font-family="system-ui, sans-serif" font-size="64" font-weight="900" fill="#ffffff" text-anchor="middle">BUZZ</text>
+  <defs>
+    <radialGradient id="grad" cx="30%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#ef4444"/>
+      <stop offset="100%" stop-color="#991b1b"/>
+    </radialGradient>
+  </defs>
+</svg>
