@@ -10,6 +10,12 @@
 
   <title>Classroom Buzzer - Unterrichtssimulation</title>
   <link rel="manifest" href="manifest.webmanifest" />
+  <script>
+    // Automatischer Fallback: Wenn index.html direkt/statisch ohne Vite-Dev-Server aufgerufen wird, leite auf dist/index.html weiter
+    if (window.location.protocol === 'file:' || (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1')) {
+      window.location.href = './dist/index.html' + window.location.search + window.location.hash;
+    }
+  </script>
   <style>
     .buzzer-subgame-link {
       position: fixed;

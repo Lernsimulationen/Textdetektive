@@ -9,7 +9,13 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
   <title>Classroom Buzzer - Unterrichtssimulation</title>
-  <link rel="manifest" href="./assets/manifest-DE0b-Vbv.webmanifest" />
+  <link rel="manifest" href="./assets/manifest-CR-Gc-KD.webmanifest" />
+  <script>
+    // Automatischer Fallback: Wenn index.html direkt/statisch ohne Vite-Dev-Server aufgerufen wird, leite auf dist/index.html weiter
+    if (window.location.protocol === 'file:' || (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1')) {
+      window.location.href = './dist/index.html' + window.location.search + window.location.hash;
+    }
+  </script>
   <style>
     .buzzer-subgame-link {
       position: fixed;
@@ -29,6 +35,6 @@
 </head>
 <body>
   <a class="buzzer-subgame-link" href="./Buzzer/index.html">Buzzer-Spiel öffnen</a>
-  <div id="app"></div>
+  <div id="app"></div>
 </body>
 </html>
