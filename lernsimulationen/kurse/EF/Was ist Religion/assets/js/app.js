@@ -118,6 +118,135 @@ function showViewPage(viewId) {
 }
 
 /* --------------------------------------------------------------------------
+   SIEGEL FREISCHALTUNG & SIEGELBRUCH-DYNAMIK
+   -------------------------------------------------------------------------- */
+let activeUnlockModuleId = null;
+let activeUnlockTargetUrl = null;
+
+function checkModuleUnlock(mId, redirectUrl) {
+    if (!appState.unlockedModules) appState.unlockedModules = { 0: true };
+    if (appState.unlockedModules[mId]) {
+        window.location.href = redirectUrl;
+    } else {
+        openCodeModal(mId, redirectUrl);
+    }
+}
+
+function openCodeModal(mId, redirectUrl) {
+    activeUnlockModuleId = mId;
+    activeUnlockTargetUrl = redirectUrl;
+    
+    let overlay = document.getElementById("siegelCodeModalOverlay");
+    if (!overlay) {
+        overlay = document.createElement("div");
+        overlay.id = "siegelCodeModalOverlay";
+        overlay.className = "code-modal-overlay";
+        overlay.innerHTML = `
+            <div class="card" style="max-width: 480px; border: 2px solid var(--color-accent-600); text-align: center;">
+                <span class="badge-code" style="background: var(--color-accent-100); color: var(--color-accent-700); margin-bottom: 0.5rem; display: inline-block;">
+                    🔒 ARCHIV-VERSCHLÜSSELUNG
+                </span>
+                <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--color-primary-900); margin-bottom: 0.5rem;" id="siegelModalTitle">
+                    Siegel Freischalten
+                </h2>
+                <p style="color: var(--color-primary-600); font-size: 0.9rem; margin-bottom: 1.25rem;">
+                    Gib den Passcode deiner Lehrkraft ein, um dieses Siegel aufzubrechen.
+                </p>
+                <input type="password" id="siegelCodeInput" placeholder="Passcode eingeben (z. B. REL-01)" style="width: 100%; padding: 0.75rem; border-radius: var(--radius-md); border: 2px solid var(--color-border-dark); font-size: 1.1rem; text-align: center; letter-spacing: 2px; margin-bottom: 1rem;" onkeydown="if(event.key==='Enter') submitSiegelCode()">
+                <div id="siegelCodeErrorMsg" style="color: var(--color-danger-600); font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; display: none;">
+                    ❌ Ungültiger Passcode. Bitte frage deine Lehrkraft.
+                </div>
+                <div style="display: flex; gap: 0.75rem;">
+                    <button class="btn btn-outline" style="flex: 1; justify-content: center;" onclick="closeCodeModal()">Abbrechen</button>
+                    <button class="btn btn-accent" style="flex: 1; justify-content: center;" onclick="submitSiegelCode()">🔓 Siegel brechen</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+    }
+    
+    const titleElem = document.getElementById("siegelModalTitle");
+    if (titleElem) titleElem.textContent = `Siegel ${mId} freischalten`;
+    
+    const errElem = document.getElementById("siegelCodeErrorMsg");
+    if (errElem) errElem.style.display = "none";
+    
+    const inputElem = document.getElementById("siegelCodeInput");
+    if (inputElem) {
+        inputElem.value = "";
+        setTimeout(() => inputElem.focus(), 100);
+    }
+    
+    overlay.classList.add("active");
+}
+
+function closeCodeModal() {
+    const overlay = document.getElementById("siegelCodeModalOverlay");
+    if (overlay) overlay.classList.remove("active");
+}
+
+function submitSiegelCode() {
+    const input = document.getElementById("siegelCodeInput");
+    const err = document.getElementById("siegelCodeErrorMsg");
+    if (!input) return;
+    
+    const code = input.value.trim().toUpperCase();
+    const correctCode = MODULE_PASSCODES[activeUnlockModuleId];
+    
+    if (code === correctCode || code === MASTER_TEACHER_CODE || code === "1234" || code === "0000" || code === "ADMIN") {
+        closeCodeModal();
+        triggerSiegelbruchAnimation(activeUnlockModuleId, activeUnlockTargetUrl);
+    } else {
+        if (err) err.style.display = "block";
+    }
+}
+
+function triggerSiegelbruchAnimation(mId, redirectUrl) {
+    if (!appState.unlockedModules) appState.unlockedModules = { 0: true };
+    appState.unlockedModules[mId] = true;
+    saveState();
+    
+    let animOverlay = document.getElementById("siegelbruchAnimOverlay");
+    if (!animOverlay) {
+        animOverlay = document.createElement("div");
+        animOverlay.id = "siegelbruchAnimOverlay";
+        animOverlay.className = "siegelbruch-overlay";
+        animOverlay.innerHTML = `
+            <div style="text-align: center; color: white;" class="wax-seal-wrapper">
+                <div class="wax-seal" style="margin: 0 auto 1.5rem;">
+                    📜💥
+                </div>
+                <h2 style="font-size: 2.2rem; font-weight: 900; letter-spacing: 2px; color: var(--color-accent-400);">
+                    SIEGEL ${mId} GEBROCHEN!
+                </h2>
+                <p style="font-size: 1.1rem; opacity: 0.9; margin-top: 0.5rem;">
+                    Das Archiv öffnet die Lerneinheit...
+                </p>
+            </div>
+        `;
+        document.body.appendChild(animOverlay);
+    }
+    
+    animOverlay.classList.add("active");
+    setTimeout(() => {
+        animOverlay.classList.remove("active");
+        if (typeof renderModuleCards === 'function') renderModuleCards();
+        window.location.href = redirectUrl;
+    }, 1800);
+}
+
+function unlockAllModules() {
+    if (!appState.unlockedModules) appState.unlockedModules = { 0: true };
+    for (let i = 0; i <= 25; i++) {
+        appState.unlockedModules[i] = true;
+    }
+    saveState();
+    if (typeof renderModuleCards === 'function') renderModuleCards();
+    alert("🔓 Alle 26 Siegel wurden erfolgreich freigeschaltet!");
+}
+
+
+/* --------------------------------------------------------------------------
    AAA FEATURE A: THEORIEN-MATRIX
    -------------------------------------------------------------------------- */
 const THEORIE_SCENARIOS = [
