@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Werkstatt der großen Fragen | Was ist Religion?</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <!-- AKTUELLES NEUES AVATAR-MODUL STYLESHEET -->
+    <link rel="stylesheet" href="./components/avatar-modul/style.css">
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="app-header">
+        <div class="header-brand" onclick="showViewPage('dashboardHome')">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="color: var(--color-accent-500);"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            <div>
+                <div class="header-title">Was ist Religion?</div>
+                <div class="header-subtitle">Werkstatt der großen Fragen</div>
+            </div>
+        </div>
+        <div class="header-actions">
+            <button class="btn btn-outline" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" onclick="openCompassModal()">
+                🧭 Spurenkompass
+            </button>
+            <button class="btn btn-outline" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" onclick="openTheorienModal()">
+                ⚖️ Theorien-Matrix
+            </button>
+            <button class="btn btn-outline" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" onclick="openKiezMapModal()">
+                🗺️ Kiez-Karte
+            </button>
+            <button class="btn btn-accent" style="padding: 0.35rem 0.85rem; font-size: 0.8rem;" onclick="openSaveSlideover(0)">
+                Speichern & Export
+            </button>
+            <div class="avatar-badge" onclick="showViewPage('avatarViewPage')">
+                <div class="avatar-badge-img">
+                    <lern-avatar id="headerAvatar" type="female" index="0" accessory="book" style="width: 100%; height: 100%; border: none; border-radius: 50%;"></lern-avatar>
+                </div>
+                <span style="font-weight: 700; font-size: 0.9rem;" id="headerAvatarName">Anna Weber</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN DASHBOARD CONTENT (DEDICATED VIEW PAGES) -->
+    <main style="max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem; width: 100%;">
+        
+        <!-- ====================================================================
+             PAGE 1: MAIN DASHBOARD HUB (DASHBOARD HOME)
+             ==================================================================== -->
+        <div id="dashboardHome" class="view-page active">
+            
+            <!-- HERO BANNER -->
+            <div class="card" style="padding: 0; overflow: hidden; position: relative; border: 2px solid var(--color-accent-600);">
+                <img src="assets/course_hero.jpg" alt="Was ist Religion?" style="width: 100%; height: 230px; object-fit: cover;">
+                <div style="padding: 2rem;">
+                    <span class="badge-code" style="background: var(--color-accent-100); color: var(--color-accent-700); margin-bottom: 0.5rem; font-size: 0.85rem;">
+                        WERKSTATT DER GROSSEN FRAGEN
+                    </span>
+                    <h1 style="font-size: 2.2rem; font-weight: 800; color: var(--color-primary-900); margin-bottom: 0.5rem;">
+                        Spurensuche: Was ist Religion?
+                    </h1>
+                    <p style="color: var(--color-primary-600); font-size: 1.05rem; max-width: 850px; margin-top: 0.4rem; line-height: 1.6;">
+                        Wo begegnen uns religiöse Spuren im Kiez, in der Werbung und in unserem Alltag? Was unterscheidet kirchliche Fassaden von echter Gemeinschaft? Tritt ein und gehe auf Spurensuche!
+                    </p>
+                </div>
+            </div>
+
+            <!-- MÜNDIGKEITS- & KOMPETENZ-RADAR BOARD -->
+            <div class="card" style="border: 2px solid var(--color-accent-600); background: #fff;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+                    <div>
+                        <span class="badge-code" style="background: var(--color-accent-100); color: var(--color-accent-700); font-size: 0.78rem;">
+                            📊 FORTSCHRITTS-ANALYSATOR
+                        </span>
+                        <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--color-primary-900); margin-top: 0.2rem;">
+                            Dein Mündigkeits- & Kompetenz-Radar
+                        </h3>
+                    </div>
+                    <button class="btn btn-outline" style="font-size: 0.75rem; padding: 0.3rem 0.6rem;" onclick="updateCompetencyRadarUI()">
+                        🔄 Radar aktualisieren
+                    </button>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem;">
+                    <div class="competency-bar-row">
+                        <div class="competency-label">
+                            <span>📚 Sachkompetenz (Begriffe & Luther)</span>
+                            <span id="competencySachVal">4%</span>
+                        </div>
+                        <div class="competency-progress-track">
+                            <div class="competency-progress-fill" id="competencySachFill" style="width: 4%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="competency-bar-row">
+                        <div class="competency-label">
+                            <span>⚖️ Urteilskompetenz (Kritik & Reflexion)</span>
+                            <span id="competencyUrteilVal">0%</span>
+                        </div>
+                        <div class="competency-progress-track">
+                            <div class="competency-progress-fill" id="competencyUrteilFill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="competency-bar-row">
+                        <div class="competency-label">
+                            <span>🧭 Dialogkompetenz (Interreligiös & Kiez)</span>
+                            <span id="competencyDialogVal">3%</span>
+                        </div>
+                        <div class="competency-progress-track">
+                            <div class="competency-progress-fill" id="competencyDialogFill" style="width: 3%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="competency-bar-row">
+                        <div class="competency-label">
+                            <span>🌱 Handlungskompetenz (Ethische Orientierung)</span>
+                            <span id="competencyHandlungVal">10%</span>
+                        </div>
+                        <div class="competency-progress-track">
+                            <div class="competency-progress-fill" id="competencyHandlungFill" style="width: 10%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PORTAL CARDS -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1.25rem; margin-bottom: 2rem;">
+                
+                <div class="portal-card" onclick="showViewPage('siegelViewPage')">
+                    <div style="font-size: 2.8rem; margin-bottom: 0.5rem;">🏛️</div>
+                    <h3 style="font-size: 1.2rem; font-weight: 800; color: var(--color-primary-900);">Die 26 Siegel</h3>
+                    <p style="font-size: 0.85rem; color: var(--color-primary-600); margin-top: 0.35rem;">
+                        Öffnet die 26 Lerneinheiten der Spurensuche
+                    </p>
+                    <button class="btn btn-accent" style="margin-top: 1rem; width: 100%; justify-content: center; font-size: 0.8rem;">
+                        Siegel betreten →
+                    </button>
+                </div>
+
+                <div class="portal-card" onclick="openCompassModal()">
+                    <div style="font-size: 2.8rem; margin-bottom: 0.5rem;">🧭</div>
+                    <h3 style="font-size: 1.2rem; font-weight: 800; color: var(--color-primary-900);">Spurenkompass</h3>
+                    <p style="font-size: 0.85rem; color: var(--color-primary-600); margin-top: 0.35rem;">
+                        Interreligiöser Dialog: Christentum, Islam & Alltag
+                    </p>
+                    <button class="btn btn-outline" style="margin-top: 1rem; width: 100%; justify-content: center; font-size: 0.8rem;">
+                        Kompass öffnen →
+                    </button>
+                </div>
+
+                <div class="portal-card" onclick="openTheorienModal()">
+                    <div style="font-size: 2.8rem; margin-bottom: 0.5rem;">⚖️</div>
+                    <h3 style="font-size: 1.2rem; font-weight: 800; color: var(--color-primary-900);">Theorien-Matrix</h3>
+                    <p style="font-size: 0.85rem; color: var(--color-primary-600); margin-top: 0.35rem;">
+                        Otto, Tillich, Marx & Feuerbach im Szenario-Vergleich
+                    </p>
+                    <button class="btn btn-outline" style="margin-top: 1rem; width: 100%; justify-content: center; font-size: 0.8rem;">
+                        Matrix öffnen →
+                    </button>
+                </div>
+
+                <div class="portal-card" onclick="openKiezMapModal()">
+                    <div style="font-size: 2.8rem; margin-bottom: 0.5rem;">🗺️</div>
+                    <h3 style="font-size: 1.2rem; font-weight: 800; color: var(--color-primary-900);">Kiez-Landkarte</h3>
+                    <p style="font-size: 0.85rem; color: var(--color-primary-600); margin-top: 0.35rem;">
+                        Interaktive Hotspots & Sakralräume in Essen-Nord
+                    </p>
+                    <button class="btn btn-outline" style="margin-top: 1rem; width: 100%; justify-content: center; font-size: 0.8rem;">
+                        Karte erkunden →
+                    </button>
+                </div>
+
+                <div class="portal-card" onclick="openStoryModal()">
+                    <div style="font-size: 2.8rem; margin-bottom: 0.5rem;">📜</div>
+                    <h3 style="font-size: 1.2rem; font-weight: 800; color: var(--color-primary-900);">Die Geschichte</h3>
+                    <p style="font-size: 0.85rem; color: var(--color-primary-600); margin-top: 0.35rem;">
+                        Spurensuche: Vom Kiez zu den großen Lebensfragen
+                    </p>
+                    <button class="btn btn-outline" style="margin-top: 1rem; width: 100%; justify-content: center; font-size: 0.8rem;">
+                        Geschichte lesen →
+                    </button>
+                </div>
+
+                <div class="portal-card" onclick="showViewPage('avatarViewPage')">
+                    <div style="font-size: 2.8rem; margin-bottom: 0.5rem;">👤</div>
+                    <h3 style="font-size: 1.2rem; font-weight: 800; color: var(--color-primary-900);">Avatar Studio</h3>
+                    <p style="font-size: 0.85rem; color: var(--color-primary-600); margin-top: 0.35rem;">
+                        Aktuelles Avatar-Modul (73 Profile & 40 Hist. Personen)
+                    </p>
+                    <button class="btn btn-outline" style="margin-top: 1rem; width: 100%; justify-content: center; font-size: 0.8rem;">
+                        Studio öffnen →
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ====================================================================
+             PAGE 2: DEDICATED 26 SIEGEL PAGE
+             ==================================================================== -->
+        <div id="siegelViewPage" class="view-page">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                <div>
+                    <button class="btn btn-outline" onclick="showViewPage('dashboardHome')" style="margin-bottom: 0.75rem;">
+                        ← Zurück zum Haupt-Dashboard
+                    </button>
+                    <h2 style="font-size: 1.8rem; color: var(--color-primary-900);">Die 26 Siegel des Archivs</h2>
+                    <p style="color: var(--color-primary-600); font-size: 0.95rem;">Gib den Passcode deiner Lehrkraft ein, um das Siegel mit einer Siegelbruch-Animation freizuschalten.</p>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.25rem;" id="moduleCardsGrid">
+                <!-- Dynamisch generiert -->
+            </div>
+        </div>
+
+        <!-- ====================================================================
+             PAGE 3: EXAKTES NEUES AVATAR-MODUL (MIT HISTORISCHEN PERSÖNLICHKEITEN)
+             ==================================================================== -->
+        <div id="avatarViewPage" class="view-page">
+            <div style="margin-bottom: 1.5rem;">
+                <button class="btn btn-outline" onclick="showViewPage('dashboardHome')" style="margin-bottom: 0.75rem;">
+                    ← Zurück zum Haupt-Dashboard
+                </button>
+            </div>
+
+            <!-- EXAKTER AUFBAU DES AKTUELLEN AVATAR-MODULS INC. HISTORICAL PICKER -->
+            <section class="hero" style="margin-bottom: 2rem;">
+              <div>
+                <div class="eyebrow">Avatar-Modul · 73 Profile</div>
+                <h1 style="font-size: 2.2rem; font-weight: 800; color: var(--color-primary-900); margin-bottom: 0.75rem;">Finde eine Stimme für dein Lernspiel.</h1>
+                <p class="intro">Wähle eine altersgerechte Figur aus der Oberstufe oder eine historische evangelische Persönlichkeit. Die Auswahl lädt immer Name, Biografie und das passende Bild gemeinsam.</p>
+                <div class="stats"><span><strong id="profile-count">73</strong> Profile</span><span><strong>40</strong> historische Personen</span><span><strong>7</strong> Accessoires</span></div>
+              </div>
+              <section class="preview card" aria-live="polite">
+                <div class="preview__avatar">
+                  <lern-avatar id="selected-avatar" type="female" index="0" accessory="book"></lern-avatar>
+                  <div id="selected-accessory" class="selected-item">📖 Buch liegt bereit</div>
+                </div>
+                <div class="preview__copy">
+                  <p class="eyebrow" id="selected-role">Schülerin · 16 Jahre</p>
+                  <h2 id="selected-name" style="font-size: 1.5rem; font-weight: 800; color: var(--color-primary-900);">Anna Weber</h2>
+                  <p id="selected-bio" style="color: var(--color-primary-600); line-height: 1.5;">Anna ist 17 und interessiert sich dafür, wie Menschen Hoffnung finden.</p>
+                </div>
+              </section>
+            </section>
+
+            <section class="workspace card" style="margin-bottom: 1.5rem;">
+              <div class="toolbar">
+                <div>
+                  <h2 style="font-size: 1.3rem; font-weight: 800; color: var(--color-primary-900);">Pseudonym auswählen</h2>
+                  <p class="muted">Der Filter wirkt ausschließlich auf die Pseudonym-Liste. <strong id="visible-count">150 sichtbar</strong></p>
+                </div>
+                <div class="filters" role="group" aria-label="Pseudonyme nach Profil filtern">
+                  <button type="button" class="filter is-active" aria-pressed="true" data-filter="all">Alle</button>
+                  <button type="button" class="filter" aria-pressed="false" data-filter="male">Männlich</button>
+                  <button type="button" class="filter" aria-pressed="false" data-filter="female">Weiblich</button>
+                  <button type="button" class="filter" aria-pressed="false" data-filter="diverse">Divers</button>
+                </div>
+              </div>
+              <p class="filter-note">Wähle anschließend unten ein Pseudonym. Das passende Bild wird automatisch angezeigt.</p>
+            </section>
+
+            <!-- NEUER HISTORISCHER PICKER (BEREITS IN DER NEUESTEN MODULVERSION) -->
+            <section class="historical-picker card" style="margin-bottom: 1.5rem;">
+              <div>
+                <p class="eyebrow">40 Profile verfügbar</p>
+                <h2 style="font-size: 1.3rem; font-weight: 800; color: var(--color-primary-900);">Historische evangelische Persönlichkeiten</h2>
+                <p class="muted">Wähle hier eine historische Person. Ihr echter Name, ihre Biografie und ihr zugeordnetes Porträt werden gemeinsam angezeigt.</p>
+              </div>
+              <label style="display: block; margin-top: 1rem;">Historische Persönlichkeit
+                <select id="historical-profile" aria-describedby="historical-help" style="width: 100%; padding: 0.65rem; border-radius: var(--radius-md); border: 1px solid var(--color-border-dark); font-weight: 700; margin-top: 0.35rem;">
+                  <option value="">Keine historische Persönlichkeit</option>
+                </select>
+                <small id="historical-help" style="color: var(--color-primary-600); display: block; margin-top: 0.35rem;">20 historische Frauen und 20 historische Männer.</small>
+              </label>
+            </section>
+
+            <section class="customize card" style="margin-bottom: 2rem;">
+              <div>
+                <h2 style="font-size: 1.3rem; font-weight: 800; color: var(--color-primary-900);">Auftritt gestalten</h2>
+                <p class="muted">Die Auswahl wird direkt auf dem Avatar angezeigt.</p>
+              </div>
+              <div class="customize__grid">
+                <label>Pseudonym auswählen
+                  <select id="pseudonym" aria-describedby="pseudonym-help" style="width: 100%; padding: 0.65rem; border-radius: var(--radius-md); border: 1px solid var(--color-border-dark); font-weight: 700;"></select>
+                  <small id="pseudonym-help">Es wird ausschließlich dieses Pseudonym angezeigt, niemals dein eigener Name.</small>
+                </label>
+                <label>Eigene Biografie
+                  <textarea id="custom-bio" rows="3" maxlength="220" placeholder="Was soll über diese Figur erzählt werden?" style="width: 100%; padding: 0.65rem; border-radius: var(--radius-md); border: 1px solid var(--color-border-dark);"></textarea>
+                </label>
+                <label>Accessoire
+                  <select id="accessory" style="width: 100%; padding: 0.65rem; border-radius: var(--radius-md); border: 1px solid var(--color-border-dark); font-weight: 700;">
+                    <option value="none">Ohne</option>
+                    <option value="glasses">👓 Brille</option>
+                    <option value="book" selected>📖 Buch</option>
+                    <option value="mug">☕ Tasse</option>
+                    <option value="headphones">🎧 Kopfhörer</option>
+                    <option value="plant">🌿 Pflanze</option>
+                    <option value="star">⭐ Stern</option>
+                  </select>
+                </label>
+                <label>Hintergrundfarbe
+                  <input id="background" type="color" value="#f4eadb" style="width: 100%; height: 42px; padding: 4px; border-radius: var(--radius-md); cursor: pointer;">
+                </label>
+              </div>
+            </section>
+        </div>
+
+    </main>
+
+    <script src="assets/js/app.js"></script>
+
+    <!-- AKTUELLES NEUES AVATAR-MODUL SKRIPT (MIT CACHE-BUSTING VERWEIS):
+         <script src="./components/avatar-modul/avatar.js?v=20260801"></script> -->
+    <script src="./components/avatar-modul/avatar.js?v=20260801"></script>
+    
+    <!-- VOLLSTÄNDIGE NEUE STEURUNGSLOGIK AUS DEM NEUESTEN COMMIT -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        loadState();
+        renderModuleCards();
+        updateCompetencyRadarUI();
+        initAktuellesAvatarModul();
+      });
+
+      function initAktuellesAvatarModul() {
+        if (!window.AVATARS || !window.PSEUDONYMS) return;
+
+        const avatarProfiles = window.AVATARS;
+        const selected = document.querySelector("#selected-avatar");
+        const headerAvatar = document.querySelector("#headerAvatar");
+        const name = document.querySelector("#selected-name");
+        const role = document.querySelector("#selected-role");
+        const bio = document.querySelector("#selected-bio");
+        const pseudonym = document.querySelector("#pseudonym");
+        const historicalProfile = document.querySelector("#historical-profile");
+        const customBio = document.querySelector("#custom-bio");
+        const accessory = document.querySelector("#accessory");
+        const selectedAccessory = document.querySelector("#selected-accessory");
+        
+        let current = avatarProfiles[0];
+        let activeFilter = "all";
+        const allPseudonyms = window.PSEUDONYMS;
+
+        const profileForOption = (option) => {
+          if (!option) return avatarProfiles[0];
+          const type = option.dataset.profileType;
+          const pool = avatarProfiles.filter((avatar) => avatar.type === type && !avatar.historical);
+          return pool[Number(option.dataset.profileIndex) % pool.length] || avatarProfiles[0];
+        };
+
+        const bioForDisplay = () => {
+          const entered = customBio.value.trim();
+          if (entered) return entered;
+          if (current.historical) return current.bio;
+          const profileFirstName = current.name.split(" ")[0];
+          return current.bio.split(profileFirstName).join(pseudonym.value);
+        };
+
+        const matchesFilter = (entry) => {
+          if (activeFilter === "all") return true;
+          return activeFilter === "diverse" ? entry.type === "nonbinary" : entry.type === activeFilter;
+        };
+
+        const renderPseudonyms = (preferredAlias = allPseudonyms[0].alias) => {
+          const visible = allPseudonyms.filter(matchesFilter);
+          pseudonym.innerHTML = visible.map((entry) => 
+            `<option data-profile-index="${entry.profileIndex}" data-profile-type="${entry.type}" value="${entry.alias}">${String(allPseudonyms.indexOf(entry) + 1).padStart(3, "0")} · ${entry.alias}</option>`
+          ).join("");
+          
+          document.querySelector("#visible-count").textContent = `${visible.length} sichtbar`;
+          const nextPosition = Math.max(0, visible.findIndex((entry) => entry.alias === preferredAlias));
+          pseudonym.selectedIndex = nextPosition;
+        };
+
+        const renderHistoricalProfiles = () => {
+          if (!historicalProfile) return;
+          const historicalOptions = (type) => avatarProfiles
+            .filter((avatar) => avatar.historical && avatar.type === type)
+            .map((avatar) => `<option value="${avatar.id}">${avatar.name} · ${avatar.period}</option>`)
+            .join("");
+            
+          historicalProfile.innerHTML = `<option value="">Keine historische Persönlichkeit</option><optgroup label="Historische Frauen (20)">${historicalOptions("female")}</optgroup><optgroup label="Historische Männer (20)">${historicalOptions("male")}</optgroup>`;
+        };
+
+        const renderSelected = () => {
+          if (!current) return;
+          selected.setAttribute("type", current.type);
+          selected.setAttribute("index", current.portraitIndex);
+          selected.setAttribute("historical", current.historical ? "true" : "false");
+
+          if (headerAvatar) {
+            headerAvatar.setAttribute("type", current.type);
+            headerAvatar.setAttribute("index", current.portraitIndex);
+            headerAvatar.setAttribute("historical", current.historical ? "true" : "false");
+          }
+
+          name.textContent = current.historical ? current.name : pseudonym.value;
+          document.querySelector("#headerAvatarName").textContent = name.textContent;
+
+          role.textContent = current.historical ? `${current.role} · ${current.period}` : `${current.role} · ${current.age} Jahre`;
+          bio.textContent = bioForDisplay();
+          selectedAccessory.textContent = accessory.options[accessory.selectedIndex].textContent + " liegt bereit";
+
+          if (typeof appState !== 'undefined' && appState.avatar) {
+            appState.avatar.name = name.textContent;
+            appState.avatar.bio = bio.textContent;
+            appState.avatar.gender = current.type === 'male' ? 'maennlich' : current.type === 'female' ? 'weiblich' : 'nonbinaer';
+            if (typeof saveState === 'function') saveState();
+          }
+        };
+
+        document.querySelectorAll(".filter").forEach((button) => button.addEventListener("click", () => {
+          const currentOption = pseudonym.options[pseudonym.selectedIndex];
+          const preferredAlias = currentOption ? currentOption.value : allPseudonyms[0].alias;
+          activeFilter = button.dataset.filter;
+          document.querySelectorAll(".filter").forEach((item) => {
+            item.classList.toggle("is-active", item === button);
+            item.setAttribute("aria-pressed", item === button ? "true" : "false");
+          });
+          renderPseudonyms(preferredAlias);
+          const nextOption = pseudonym.options[pseudonym.selectedIndex];
+          current = profileForOption(nextOption);
+          if (historicalProfile) historicalProfile.value = "";
+          customBio.value = "";
+          renderSelected();
+        }));
+
+        pseudonym.addEventListener("change", () => {
+          const selectedOption = pseudonym.options[pseudonym.selectedIndex];
+          current = profileForOption(selectedOption);
+          if (historicalProfile) historicalProfile.value = "";
+          customBio.value = "";
+          renderSelected();
+        });
+
+        if (historicalProfile) {
+          historicalProfile.addEventListener("change", () => {
+            if (!historicalProfile.value) return;
+            current = avatarProfiles.find((avatar) => avatar.id === historicalProfile.value);
+            customBio.value = "";
+            renderSelected();
+          });
+        }
+
+        customBio.addEventListener("input", renderSelected);
+        accessory.addEventListener("change", (event) => {
+          selected.setAttribute("accessory", event.target.value);
+          if (headerAvatar) headerAvatar.setAttribute("accessory", event.target.value);
+          renderSelected();
+        });
+
+        document.querySelector("#background").addEventListener("input", (event) => {
+          selected.setAttribute("background", event.target.value);
+        });
+
+        renderPseudonyms(allPseudonyms[0].alias);
+        renderHistoricalProfiles();
+        renderSelected();
+      }
+
+      function renderModuleCards() {
+          const grid = document.getElementById("moduleCardsGrid");
+          if (!grid) return;
+          grid.innerHTML = "";
+
+          Object.keys(MODULE_CONFIG_REGISTRY).forEach(k => {
+              const m = MODULE_CONFIG_REGISTRY[k];
+              const isUnlocked = !!appState.unlockedModules[m.id];
+              const targetUrl = `module_${m.id}/index.html`;
+
+              const cDiv = document.createElement("div");
+              cDiv.className = "card";
+              cDiv.style.margin = "0";
+              cDiv.style.display = "flex";
+              cDiv.style.flexDirection = "column";
+              cDiv.style.justifyContent = "space-between";
+
+              cDiv.innerHTML = `
+                  <div>
+                      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                          <span style="font-size: 0.85rem; font-weight: 800; color: ${isUnlocked ? 'var(--color-success-600)' : 'var(--color-danger-600)'};">
+                              ${isUnlocked ? '🔓 Freigeschaltet' : '🔒 Verschlüsselt'}
+                          </span>
+                      </div>
+                      <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--color-primary-900); margin-bottom: 0.4rem;">${m.title}</h3>
+                      <p style="font-size: 0.85rem; color: var(--color-primary-600); margin-bottom: 1rem;">${m.desc}</p>
+                  </div>
+
+                  <button class="btn ${isUnlocked ? 'btn-primary' : 'btn-accent'}" style="width: 100%; justify-content: center;" onclick="checkModuleUnlock(${m.id}, '${targetUrl}')">
+                      ${isUnlocked ? 'Siegel betreten →' : '🔑 Siegel-Code eingeben'}
+                  </button>
+              `;
+              grid.appendChild(cDiv);
+          });
+      }
+    </script>
+</body>
+</html>

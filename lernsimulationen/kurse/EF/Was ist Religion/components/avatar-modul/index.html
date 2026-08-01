@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lern-Avatar-Bibliothek</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div>
+        <div class="eyebrow">Avatar-Modul · 73 Profile</div>
+        <h1>Finde eine Stimme für dein Lernspiel.</h1>
+        <p class="intro">Wähle eine altersgerechte Figur aus der Oberstufe oder eine historische evangelische Persönlichkeit. Die Auswahl lädt immer Name, Biografie und das passende Bild gemeinsam.</p>
+        <div class="stats"><span><strong id="profile-count">73</strong> Profile</span><span><strong>40</strong> historische Personen</span><span><strong>7</strong> Accessoires</span></div>
+      </div>
+      <section class="preview card" aria-live="polite">
+        <div class="preview__avatar"><lern-avatar id="selected-avatar" type="female" index="0" accessory="book"></lern-avatar><div id="selected-accessory" class="selected-item">📖 Buch liegt bereit</div></div>
+        <div class="preview__copy"><p class="eyebrow" id="selected-role">Schülerin · 16 Jahre</p><h2 id="selected-name">Anna Weber</h2><p id="selected-bio">Anna ist 17 und interessiert sich dafür, wie Menschen Hoffnung finden.</p></div>
+      </section>
+    </section>
+
+    <section class="workspace card">
+      <div class="toolbar">
+        <div><h2>Pseudonym auswählen</h2><p class="muted">Der Filter wirkt ausschließlich auf die Pseudonym-Liste. <strong id="visible-count">150 sichtbar</strong></p></div>
+        <div class="filters" role="group" aria-label="Pseudonyme nach Profil filtern"><button type="button" class="filter is-active" aria-pressed="true" data-filter="all">Alle</button><button type="button" class="filter" aria-pressed="false" data-filter="male">Männlich</button><button type="button" class="filter" aria-pressed="false" data-filter="female">Weiblich</button><button type="button" class="filter" aria-pressed="false" data-filter="diverse">Divers</button></div>
+      </div>
+      <p class="filter-note">Wähle anschließend unten ein Pseudonym. Das passende Bild wird automatisch angezeigt.</p>
+    </section>
+
+    <section class="historical-picker card">
+      <div><p class="eyebrow">40 Profile verfügbar</p><h2>Historische evangelische Persönlichkeiten</h2><p class="muted">Wähle hier eine historische Person. Ihr echter Name, ihre Biografie und ihr zugeordnetes Porträt werden gemeinsam angezeigt.</p></div>
+      <label>Historische Persönlichkeit<select id="historical-profile" aria-describedby="historical-help"><option value="">Keine historische Persönlichkeit</option></select><small id="historical-help">20 historische Frauen und 20 historische Männer.</small></label>
+    </section>
+
+    <section class="customize card">
+      <div><h2>Auftritt gestalten</h2><p class="muted">Die Auswahl wird direkt auf dem Avatar angezeigt.</p></div>
+      <div class="customize__grid">
+        <label>Pseudonym auswählen<select id="pseudonym" aria-describedby="pseudonym-help"></select><small id="pseudonym-help">Es wird ausschließlich dieses Pseudonym angezeigt, niemals dein eigener Name.</small></label>
+        <label>Eigene Biografie<textarea id="custom-bio" rows="3" maxlength="220" placeholder="Was soll über diese Figur erzählt werden?"></textarea></label>
+        <label>Accessoire<select id="accessory"><option value="none">Ohne</option><option value="glasses">👓 Brille</option><option value="book">📖 Buch</option><option value="mug">☕ Tasse</option><option value="headphones">🎧 Kopfhörer</option><option value="plant">🌿 Pflanze</option><option value="star">⭐ Stern</option></select></label>
+        <label>Hintergrundfarbe<input id="background" type="color" value="#f4eadb"></label>
+      </div>
+    </section>
+
+    <section class="embed card"><h2>Einbindung im Lernspiel</h2><pre><code>&lt;script src="./components/avatar-modul/avatar.js"&gt;&lt;/script&gt;
+&lt;lern-avatar type="female" index="0" accessory="book"&gt;&lt;/lern-avatar&gt;</code></pre><p class="muted">Die Bildraster liegen im Ordner <code>assets/</code> und werden ohne externe Bibliothek geladen.</p></section>
+  </main>
+  <script src="./avatar.js"></script>
+  <script>
+    const avatarProfiles = window.AVATARS;
+    const selected = document.querySelector("#selected-avatar");
+    const name = document.querySelector("#selected-name");
+    const role = document.querySelector("#selected-role");
+    const bio = document.querySelector("#selected-bio");
+    const pseudonym = document.querySelector("#pseudonym");
+    const historicalProfile = document.querySelector("#historical-profile");
+    const customBio = document.querySelector("#custom-bio");
+    const accessory = document.querySelector("#accessory");
+    const selectedAccessory = document.querySelector("#selected-accessory");
+    let current = avatarProfiles[0];
+    let activeFilter = "all";
+    const allPseudonyms = window.PSEUDONYMS;
+    const profileForOption = (option) => {
+      const type = option.dataset.profileType;
+      const pool = avatarProfiles.filter((avatar) => avatar.type === type && !avatar.historical);
+      return pool[Number(option.dataset.profileIndex) % pool.length];
+    };
+    const bioForDisplay = () => {
+      const entered = customBio.value.trim();
+      if (entered) return entered;
+      if (current.historical) return current.bio;
+      const profileFirstName = current.name.split(" ")[0];
+      return current.bio.split(profileFirstName).join(pseudonym.value);
+    };
+    const matchesFilter = (entry) => {
+      if (activeFilter === "all") return true;
+      return activeFilter === "diverse" ? entry.type === "nonbinary" : entry.type === activeFilter;
+    };
+    const renderPseudonyms = (preferredAlias = allPseudonyms[0].alias) => {
+      const visible = allPseudonyms.filter(matchesFilter);
+      pseudonym.innerHTML = visible.map((entry, index) => `<option data-profile-index="${entry.profileIndex}" data-profile-type="${entry.type}" value="${entry.alias}">${String(allPseudonyms.indexOf(entry) + 1).padStart(3, "0")} · ${entry.alias}</option>`).join("");
+      document.querySelector("#visible-count").textContent = `${visible.length} sichtbar`;
+      const nextPosition = Math.max(0, visible.findIndex((entry) => entry.alias === preferredAlias));
+      pseudonym.selectedIndex = nextPosition;
+    };
+    const renderHistoricalProfiles = () => {
+      const historicalOptions = (type) => avatarProfiles.filter((avatar) => avatar.historical && avatar.type === type).map((avatar) => `<option value="${avatar.id}">${avatar.name} · ${avatar.period}</option>`).join("");
+      historicalProfile.innerHTML = `<option value="">Keine historische Persönlichkeit</option><optgroup label="Historische Frauen (20)">${historicalOptions("female")}</optgroup><optgroup label="Historische Männer (20)">${historicalOptions("male")}</optgroup>`;
+    };
+    const renderSelected = () => {
+      selected.setAttribute("type", current.type); selected.setAttribute("index", current.portraitIndex); selected.setAttribute("historical", current.historical ? "true" : "false");
+      name.textContent = current.historical ? current.name : pseudonym.value; role.textContent = current.historical ? `${current.role} · ${current.period}` : `${current.role} · ${current.age} Jahre`; bio.textContent = bioForDisplay();
+      selectedAccessory.textContent = accessory.options[accessory.selectedIndex].textContent + " liegt bereit";
+    };
+    document.querySelectorAll(".filter").forEach((button) => button.addEventListener("click", () => {
+      const currentOption = pseudonym.options[pseudonym.selectedIndex];
+      const preferredAlias = currentOption ? currentOption.value : allPseudonyms[0].alias;
+      activeFilter = button.dataset.filter;
+      document.querySelectorAll(".filter").forEach((item) => {
+        item.classList.toggle("is-active", item === button);
+        item.setAttribute("aria-pressed", item === button ? "true" : "false");
+      });
+      renderPseudonyms(preferredAlias);
+      const nextOption = pseudonym.options[pseudonym.selectedIndex];
+      current = profileForOption(nextOption);
+      historicalProfile.value = "";
+      customBio.value = "";
+      renderSelected();
+    }));
+    pseudonym.addEventListener("change", () => {
+      const selectedOption = pseudonym.options[pseudonym.selectedIndex];
+      current = profileForOption(selectedOption);
+      historicalProfile.value = "";
+      customBio.value = "";
+      renderSelected();
+    });
+    historicalProfile.addEventListener("change", () => {
+      if (!historicalProfile.value) return;
+      current = avatarProfiles.find((avatar) => avatar.id === historicalProfile.value);
+      customBio.value = "";
+      renderSelected();
+    });
+    customBio.addEventListener("input", renderSelected);
+    accessory.addEventListener("change", (event) => { selected.setAttribute("accessory", event.target.value); renderSelected(); });
+    document.querySelector("#background").addEventListener("input", (event) => selected.setAttribute("background", event.target.value));
+    renderPseudonyms(allPseudonyms[0].alias);
+    renderHistoricalProfiles();
+    renderSelected();
+  </script>
+</body>
+</html>

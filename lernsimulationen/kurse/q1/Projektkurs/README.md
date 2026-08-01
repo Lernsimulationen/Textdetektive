@@ -1,61 +1,76 @@
-# KI – Mensch – Verantwortung
+# KI · Mensch · Verantwortung
 
-Eine modulare, datenschutzfreundliche Offline-Lernplattform für längere
-Unterrichtsreihen. Der erste Beispielkurs begleitet Lernende als Mitglieder
-einer KI-Ethik-Kommission durch 20 konfigurierbare Missionen.
+Ein grafisches Lerntagebuch mit Selbstlernstrecke für den Projektkurs. Die Anwendung läuft als lokale HTML-Datei ohne Framework, Datenbank, Login, Cloud-Anbindung oder externe Bibliothek.
 
-## Erster Meilenstein
+## Ziel
 
-- responsive Missionszentrale für die aktuelle Safari-Version auf iPadOS
-- PWA mit lokalem Service Worker und statischem Offline-Kern
-- 20 konfigurierbare Kapitel mit drei Fachperspektiven
-- Level, XP, Ränge, Badges und Freischaltungen
-- lokale Avatarakte ohne Klarnamen
-- bewusster Import und Export einer Projektdatei
-- grafische Kurswerkstatt und Kursdatei-Export
-- lokaler Buzzer und anonyme Abstimmung
-- strikt optionaler Supabase-Adapter
+Die Lernenden bearbeiten Missionen in kleinen Schritten, wechseln zwischen technischen, gesellschaftlichen und ethischen Perspektiven und halten ihren eigenen Lernweg fest. Jede Selbstlernstrecke besteht aus Modulen mit:
 
-Es werden keine Konten, Cookies, Analytics, externen Schriftarten oder
-automatischen Cloudspeicher verwendet. Projektstände werden nicht in
-LocalStorage oder IndexedDB geschrieben.
+- einem visuellen Einstieg
+- einer kurzen Lernidee
+- einer Leitfrage
+- einer persönlichen Notiz
+- einem klaren nächsten Schritt
 
-## Entwicklung
+## Zentrales Dashboard
 
-Voraussetzung ist Node.js 22 oder neuer.
+Die Anwendung beginnt mit einem Begrüßungsbildschirm und führt danach in das Dashboard. Das Dashboard ist der zentrale Knotenpunkt: Von dort aus verzweigt die Anwendung in Tutorial, Ethikkommission, Lerntagebuch, persönliche Akte und Live-Labor. Eine Seitenleiste gibt es bewusst nicht.
 
-```bash
-pnpm install
-pnpm dev
-pnpm build
+Die Geschichte beginnt mit einer Einladung: KI verändert Entscheidungen, Erwartungen und Verantwortungsräume. Die Lernenden werden als neue Mitglieder einer Kommission eingesetzt. Sie sollen keine vorgegebene Meinung reproduzieren, sondern Beobachtungen sammeln, Perspektiven vergleichen und am Ende ein eigenes, begründetes Votum formulieren.
+
+Mission 0 ist der geschützte Einstieg. Dort können Lernende mit einem Pseudonym, Kurs oder einer Lerngruppe und einer eigenen Erwartung starten. Erst nach Bestätigung der Schutzregeln beginnt der weitere Missionsweg.
+
+## Avatar-Studio
+
+Die Identität kommt vor dem Dashboard. Im Avatar-Studio stehen fünf männliche, fünf weibliche und ein non-binärer Avatar als lokale Rasterbilder zur Auswahl. Dazu kann ein Farbskill gewählt werden: Er markiert die Rolle visuell, ohne sie auf eine feste Eigenschaft festzulegen. Die Porträts liegen in `bilder/avatar-sprite.png`.
+
+Noa Levin ist der non-binäre Beispielavatar. Noa verbindet einen wachen Blick für politische Macht mit Fragen nach Würde, Gewissen und Verantwortung. Im Studio kann eine Biografie mit bis zu 500 Zeichen geschrieben werden. Wichtig: Diese Biografie beschreibt die Rolle, die im Projektkurs gespielt werden soll – nicht die private Biografie der lernenden Person.
+
+## Dateien
+
+- `index.html` – komplette Anwendung inklusive CSS und JavaScript
+- `bilder/` – lokale, KI-generierte Bildassets
+- `CHANGELOG.md` – nachvollziehbare Änderungen und Sicherheitsregeln
+
+## Start
+
+Die Datei kann direkt per Doppelklick geöffnet werden. Für eine lokale Vorschau reicht ein beliebiger statischer Webserver. Es werden keine Pakete installiert und keine Netzwerkdienste benötigt.
+
+## Module sicher erweitern
+
+Module liegen in `index.html` im Array `state.modules`. Jedes Modul besitzt eine stabile ID:
+
+```js
+{
+  id: "selbstlernen",
+  kicker: "03 · Selbstlernen",
+  title: "Lernen in kleinen Missionen",
+  description: "...",
+  question: "...",
+  image: "bilder/lerntagebuch.png"
+}
 ```
 
-Die Anwendung basiert auf React, TypeScript, Vinext/Vite und lokal kompiliertem
-Tailwind CSS. Für GitHub Pages setzt `next.config.ts` bei einem GitHub-Actions-
-Build automatisch Repositoryname, `basePath`, `assetPrefix` und statischen
-Export.
+Die Bearbeitung ist bewusst kein sichtbarer Bestandteil der Lernoberfläche. Die Oberfläche dient dem Lernen, nicht dem versehentlichen Umbau des Kurses. Änderungen an einzelnen Modulen werden kontrolliert im Chat oder direkt im geschützten Datenblock der HTML-Datei vorgenommen und anschließend als Projektdatei gesichert.
 
-## Konfiguration
+Für Änderungen im Chat gilt derselbe sichere Ablauf:
 
-Der ausgelieferte Beispielkurs liegt in `app/data/course.ts`. Im laufenden
-Prototyp kann er ohne Programmierkenntnisse in der **Kurswerkstatt** bearbeitet
-und als `.mission-course.json` exportiert werden.
+1. Vor der Änderung eine Projektdatei exportieren.
+2. Nur das gewünschte Modul anhand seiner `id` ändern; Dashboard, Missionen und übrige Module bleiben unverändert.
+3. IDs und Bildpfade nicht umbenennen, sofern keine bewusste Migration geplant ist.
+4. Keine Skripte aus dem Internet, keine `eval`-Aufrufe und kein HTML aus Eingabefeldern einfügen.
+5. Die bearbeitete Datei öffnen und Mission, Notiz, Import und Export kurz prüfen.
 
-Eine Projektdatei endet auf `.mission-project.json`. Sie enthält den
-Projektzustand und einen Schnappschuss der zugehörigen Kurskonfiguration.
+Die Anwendung escaped bearbeitbare Texte vor der Anzeige und akzeptiert beim Import nur bekannte lokale Bildpfade im Format `bilder/<name>.png`.
 
-## Dokumentation
+## Daten und Datenschutz
 
-- `docs/01-anforderungsanalyse.md`
-- `docs/02-architektur.md`
-- `docs/03-datenschutzkonzept.md`
-- `docs/04-ui-ux-konzept.md`
-- `docs/05-live-modul.md`
+Der Lernstand bleibt nur im Arbeitsspeicher, bis er ausdrücklich als JSON exportiert wird. Es gibt kein `localStorage`, keine Cookies, keine Analytics und keine Supabase-Integration. Der JSON-Export enthält Kurs, Module, Fortschritt und Notizen und kann lokal wieder importiert werden.
 
-## Supabase-Zusatzmodul
+## Live-Labor als separates Untergame
 
-Der Offline-Kern importiert den Adapter erst nach einer bewussten Aktivierung.
-Für einen realen Einsatz sind Row-Level Security, kurze Raumlaufzeiten, eine
-schulische Datenschutzprüfung und eine eigene anonyme Aggregationsansicht
-erforderlich. Ein `service_role`-Schlüssel darf nie im Browser verwendet
-werden.
+Das Live-Labor ist vom persönlichen Lernspiel getrennt. Die aktuelle Version enthält nur eine lokale Demo. Eine spätere Online-Variante mit Raumcode, gemeinsamer Abstimmung und eventuell Supabase wird als eigenes Modul beziehungsweise eigener Unterordner geplant. Sie darf weder den Lernstand noch die Missionslogik voraussetzen oder verändern.
+
+## Bildsprache
+
+Die Bilder wurden als zusammenhängende, textfreie Raster-Illustrationen erzeugt. Es werden keine Vektorgrafiken für die Avatare verwendet. Text und Lerninhalte bleiben im HTML, damit sie unabhängig vom Bild bearbeitet werden können.
