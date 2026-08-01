@@ -17,25 +17,6 @@ body{
     linear-gradient(145deg, #06111f, #0d2f42 48%, #235064 100%) !important;
 }
 
-body::after{
-  content: var(--studio-version);
-  position: fixed;
-  right: 14px;
-  bottom: 12px;
-  z-index: 1000;
-  padding: 7px 10px;
-  border: 1px solid rgba(255,255,255,0.22);
-  border-radius: 999px;
-  background: rgba(4, 13, 24, 0.72);
-  color: rgba(247, 239, 226, 0.82);
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  box-shadow: 0 10px 28px rgba(0,0,0,0.25);
-  backdrop-filter: blur(12px);
-  pointer-events: none;
-}
-
 .shell{
   position: relative;
 }
@@ -145,7 +126,8 @@ a.card{
   border-radius: 34px !important;
   background:
     linear-gradient(180deg, rgba(4, 13, 24, 0) 0 42%, rgba(4, 13, 24, 0.56) 58%, rgba(4, 13, 24, 0.98) 100%),
-    var(--card-image, url("../../assets/index-design/learning-hero-v2.png")) center top / cover !important;
+    var(--card-image, url("../../assets/index-design/learning-hero-v2.png")) center top / cover,
+    url("../../assets/index-design/learning-hero-v2.png") center top / cover !important;
   color: var(--studio-ink) !important;
   box-shadow: 0 28px 80px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255,255,255,0.24) !important;
   transform: translateZ(0);
@@ -236,6 +218,21 @@ a.btn.primary{
   color: #1c1309 !important;
 }
 
+a.card:focus-visible,
+a.btn:focus-visible,
+.back-link:focus-visible,
+.footer-link:focus-visible{
+  outline: 3px solid var(--studio-gold);
+  outline-offset: 4px;
+}
+
+.hint{
+  max-width: 70ch;
+  margin: 24px auto 0;
+  line-height: 1.55;
+  text-align: center;
+}
+
 footer,
 .hint{
   color: rgba(247, 239, 226, 0.74) !important;
@@ -262,4 +259,132 @@ footer,
   a.card::after{
     min-height: 170px;
   }
+
+  footer{
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+/* Helles, universelles Index-Design */
+body{
+  color: #17324d !important;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(80, 170, 190, 0.18), transparent 28rem),
+    linear-gradient(180deg, #f8fbfd 0%, #e8f1f5 100%) !important;
+}
+
+.shell::before{
+  background:
+    linear-gradient(rgba(23, 50, 77, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(23, 50, 77, 0.035) 1px, transparent 1px);
+}
+
+.hero{
+  min-height: 230px;
+  border-color: rgba(39, 91, 116, 0.2);
+  color: #17324d;
+  background:
+    linear-gradient(115deg, rgba(255,255,255,0.98), rgba(255,255,255,0.9) 58%, rgba(227,244,246,0.82)),
+    var(--hero-image, url("../../assets/index-design/learning-hero-v2.png")) center 42% / cover;
+  box-shadow: 0 22px 55px rgba(30, 73, 93, 0.12);
+}
+
+.hero h1,
+.hero .lead,
+.hero .eyebrow{
+  color: #17324d !important;
+  text-shadow: none;
+}
+
+.hero .lead{
+  color: #526b7c !important;
+}
+
+.pathway span{
+  border-color: rgba(39, 91, 116, 0.16);
+  background: rgba(255,255,255,0.7);
+  color: #466476;
+}
+
+.pathway span + span::before{
+  color: #c87835;
+}
+
+.card,
+a.card{
+  min-height: 350px;
+  border-radius: 24px !important;
+  border-color: rgba(39, 91, 116, 0.16) !important;
+  background: #ffffff !important;
+  color: #17324d !important;
+  box-shadow: 0 10px 24px rgba(30, 73, 93, 0.08) !important;
+}
+
+.card::before,
+a.card::before{
+  display: none;
+}
+
+.card::after,
+a.card::after{
+  min-height: 112px;
+  opacity: 0.72;
+  border-bottom: 1px solid rgba(39, 91, 116, 0.12);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.26), rgba(255,255,255,0.48)),
+    url("../../assets/index-design/learning-hero-v2.png") center 42% / cover;
+}
+
+.card-title span:first-child,
+.card-header h2{
+  color: #17324d !important;
+  text-shadow: none;
+}
+
+.card-tag{
+  background: #e5f1f4 !important;
+  color: #236579 !important;
+  border-color: rgba(35, 101, 121, 0.18);
+}
+
+.card-copy{
+  color: #526b7c !important;
+}
+
+.card-meta{
+  background: #f1f6f8 !important;
+  color: #426276 !important;
+  border-color: rgba(39, 91, 116, 0.14);
+}
+
+a.btn{
+  border-color: rgba(39, 91, 116, 0.2) !important;
+  background: #edf5f7 !important;
+  color: #1e5266 !important;
+}
+
+a.btn.primary{
+  background: linear-gradient(135deg, #e9a34f, #d97739) !important;
+  color: #29170a !important;
+}
+
+.grid{
+  gap: 18px !important;
+}
+
+.card-copy{
+  font-size: 0.95rem !important;
+}
+
+footer,
+.hint{
+  color: #607888 !important;
+  border-color: rgba(39, 91, 116, 0.16) !important;
+}
+
+.back-link,
+.footer-link{
+  color: #236579 !important;
 }
