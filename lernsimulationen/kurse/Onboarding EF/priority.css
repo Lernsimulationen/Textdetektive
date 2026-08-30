@@ -1,0 +1,1 @@
+.topic-tiles a:first-child{position:relative;border:2px solid #127c86;box-shadow:0 10px 22px rgba(18,124,134,.12)}.topic-tiles a:first-child::after{content:"Für dich jetzt wichtig";position:absolute;top:15px;right:16px;color:#127c86;font-size:.68rem;font-weight:850;letter-spacing:.06em;text-transform:uppercase}

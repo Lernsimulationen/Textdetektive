@@ -1,0 +1,10 @@
+/* Ruhiger, moderner Einstieg auf der Startseite. */
+.site-header{border-bottom:1px solid rgba(230,199,121,.18)}
+.site-header .brand-mark{box-shadow:0 0 0 5px rgba(230,199,121,.08)}
+.hero{position:relative;isolation:isolate;background:radial-gradient(circle at 84% 28%,rgba(230,199,121,.18),transparent 26%),linear-gradient(135deg,#07182d 0%,#12365f 58%,#174b58 100%)}
+.hero::before{content:"";position:absolute;z-index:-1;right:-80px;bottom:-160px;width:470px;height:470px;border:1px solid rgba(230,199,121,.23);border-radius:50%;box-shadow:0 0 0 38px rgba(230,199,121,.045),0 0 0 76px rgba(230,199,121,.025)}
+.hero .eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid rgba(230,199,121,.38);border-radius:999px;background:rgba(7,24,45,.22);color:#f4d887}
+.hero h1{max-width:650px;text-shadow:0 2px 22px rgba(0,0,0,.13)}
+.hero-copy{max-width:570px}
+.hero-note{border:1px solid rgba(230,199,121,.3);border-left:3px solid var(--gold-light);box-shadow:0 16px 42px rgba(0,0,0,.14)}
+@media(max-width:680px){.hero::before{right:-210px;bottom:-200px;width:400px;height:400px}.hero .eyebrow{font-size:10px}}
